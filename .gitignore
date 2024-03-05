@@ -2,3 +2,5 @@
 model/*.pth
 data/
 tmp/
+save_model/
+data_record/

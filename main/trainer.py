@@ -79,6 +79,8 @@ class Trainer():
             'pad': self.pad,
             'keep_smaller_batches': self.keep_smaller_batches,
             'max_seq_len': self.max_seq_len,
+            'max_dimensions': [self.model_config.max_width, self.model_config.max_height],
+            'min_dimensions': [self.model_config.min_width, self.model_config.min_height]
         }
         self.train_loader.update(**args, test=False)
 
@@ -137,7 +139,6 @@ class Trainer():
                 im = im.to(self.device)
                 loss = self.model.data_parallel(
                     im, device_ids=gpu, tgt_seq=tgt_seq, mask=tgt_mask)
-                print(loss)
                 loss.backward()  # data parallism loss is a vector
                 train_loss += loss.item()
                 torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1)
@@ -200,7 +201,7 @@ class Trainer():
 
             bleus, edit_dists, token_acc = [], [], []
             bleu_score, edit_distance, token_accuracy = 0, 1, 0
-            for i, (seq, im) in eval_iter:
+            for (seq, im) in eval_iter:
                 if seq is None or im is None:
                     continue
                 # loss = decoder(tgt_seq, mask=tgt_mask, context=encoded)
