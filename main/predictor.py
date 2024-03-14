@@ -23,13 +23,11 @@ class LatexOCR():
     last_pic = None
     model_config: JsonData = None
 
-    def __init__(self, model_config, vocab_file,  encoder_structure='hybrid', resume_path=None, no_resize=True, resize_model_path=None):
+    def __init__(self, model_config, vocab_file,  encoder_structure='hybrid', resume_path=None, resize_model_path=None):
         self.model_config = model_config
         self.vocab_file = vocab_file
         self.encoder_structure = encoder_structure
-        self.no_resize = no_resize
         self.resize_model_path = resize_model_path
-        self.model_config.no_resize = no_resize
         self.model_config.max_dimensions = [
             self.model_config.max_width, self.model_config.max_height]
         self.model_config.min_dimensions = [
@@ -46,7 +44,7 @@ class LatexOCR():
                 resume_path, map_location=self.device))
         self.model.eval()
 
-        if self.resize_model_path is not None and not self.no_resize:
+        if self.resize_model_path is not None:
             self.image_resizer = ResNetV2(layers=[2, 3, 3], num_classes=max(self.model_config.max_dimensions)//32, global_pool='avg', in_chans=1, drop_rate=.05,
                                           preact=True, stem_type='same', conv_layer=StdConv2dSame).to(self.device)
             self.image_resizer.load_state_dict(torch.load(
@@ -55,7 +53,7 @@ class LatexOCR():
         self.tokenizer = PreTrainedTokenizerFast(
             tokenizer_file=self.vocab_file)
 
-    def __call__(self, img=None, resize=True) -> str:
+    def __call__(self, img=None) -> str:
         """Get a prediction from an image
 
         Args:
@@ -77,7 +75,7 @@ class LatexOCR():
             self.last_pic = img.copy()
         img = self.minmax_size(
             pad(img), self.model_config.max_dimensions, self.model_config.min_dimensions)
-        if (self.image_resizer is not None and not self.no_resize) and resize:
+        if self.image_resizer is not None:
             with torch.no_grad():
                 input_image = img.convert('RGB').copy()
                 r, w, h = 1, input_image.size[0], input_image.size[1]

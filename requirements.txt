@@ -11,8 +11,3 @@ x_transformers==0.15.0
 imagesize>=1.4.1
 Levenshtein>=0.25.0
 torchtext>=0.17.1
-opencv_python_headless>=4.1.1.26
-requests>=2.22.0
-PyYAML>=5.4.1
-pandas>=1.0.0
-Pillow>=9.1.0

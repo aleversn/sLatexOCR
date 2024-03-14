@@ -15,10 +15,11 @@ from main.utils import *
 from Levenshtein import distance
 from torchtext.data import metrics
 
+seed_everything(42)
 
 class Trainer():
 
-    def __init__(self, model_config, encoder_structure='hybrid', batchsize=10, testbatchsize=20, pad=False, keep_smaller_batches=True, max_seq_len=512, vocab_file=None, train_data_path=[], eval_data_path=[], resume_path=None, task_name='Sim'):
+    def __init__(self, model_config, encoder_structure='hybrid', batchsize=10, testbatchsize=20, pad=False, keep_smaller_batches=True, max_seq_len=512, vocab_file=None, train_data_path=[], eval_data_path=[], resume_path=None, task_name='LatexOCR'):
         self.model_config = model_config
         self.encoder_structure = encoder_structure
         self.batchsize = batchsize
@@ -117,7 +118,6 @@ class Trainer():
     def train(self, resume_step=None, num_epochs=30, lr=1e-4, gpu=[0], eval_call_epoch=None):
         if torch.cuda.is_available():
             self.model_config.gpu_devices = gpu
-            gpu_memory_check(self.model, self.model_config)
 
         optimizer = optim.Adam(self.model.parameters(), lr=lr, weight_decay=0.)
         scheduler = get_linear_schedule_with_warmup(optimizer, 190, 80000)
@@ -194,7 +194,6 @@ class Trainer():
 
     def eval(self, epoch, temperature=0.2, gpu=[0]):
         with torch.no_grad():
-            eval_count = 0
 
             eval_iter = tqdm(self.eval_loader)
             self.model.eval()
