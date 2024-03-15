@@ -9,8 +9,9 @@ timm==0.5.4
 einops>=0.3.0
 x_transformers==0.15.0
 imagesize>=1.4.1
-Levenshtein>=0.25.0
+Levenshtein>=0.21.0
 torchtext>=0.17.1
 fastapi>=0.110.0
 uvicorn[standard]
 python-multipart>=0.0.9
+pillow==10.2.0

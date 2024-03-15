@@ -1,4 +1,5 @@
 {
     "model_path": "../save_model/released/Checkpoint_8146/model.pth",
-    "resize_model_path": "../model/image_resizer.pth"
+    "resize_model_path": "../model/image_resizer.pth",
+    "api_key": []
 }
