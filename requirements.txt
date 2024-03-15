@@ -11,3 +11,6 @@ x_transformers==0.15.0
 imagesize>=1.4.1
 Levenshtein>=0.25.0
 torchtext>=0.17.1
+fastapi>=0.110.0
+uvicorn[standard]
+python-multipart>=0.0.9
